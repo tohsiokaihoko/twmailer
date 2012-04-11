@@ -1,0 +1,175 @@
+<!DOCTYPE html><!--HTML5 doctype-->
+<html>
+    <head>
+        <title>twmail</title>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <link rel="stylesheet" type="text/css" href="styles/jq.ui.css" title="default"/>
+        <link rel="stylesheet" type="text/css" href="styles/icons.css" />
+        <link rel="stylesheet" type="text/css" href="styles/jq.ui.carbon.css" title="carbon" disabled='true'/>
+        <link rel="stylesheet" type="text/css" href="styles/jq.ui.eco.css" title="eco" disabled='true' />
+        <link rel="stylesheet" type="text/css" href="styles/jq.ui.frosty.css" title="frosty" disabled='true'/>
+        <link rel="stylesheet" type="text/css" href="styles/jq.ui.slate.css" title="slate" disabled='true'/>
+        <link rel="stylesheet" type="text/css" href="styles/jq.ui.volcano.css" title="volcano" disabled='true' />
+        <link rel="stylesheet" type="text/css" href="styles/default.css"/>
+        <script type="text/javascript" charset="utf-8" src="http://localhost:58888/_appMobi/appmobi.js"></script> 
+        <script type="text/javascript" charset="utf-8" src="http://localhost:58888/_appMobi/xhr.js"></script> 
+        <script type="text/javascript" charset="utf-8" src="js/jq.ui.min.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/twitapi_0.2.0.js"></script>
+    </head>
+    <body>
+        <div id="jQUi"> <!-- this is the main container div.  This way, you can have only part of your app use jqUi -->
+            <!-- this is the header div at the top -->
+            <div id="header">
+                <a href="javascript:$.ui.toggleSideMenu()" class="button" style="float:right">menu</a>
+            </div>
+            <div id="header2">
+            </div>
+            <div id="content">
+                <!-- here is where you can add your panels -->
+                <div title='受信トレイ' id="main" class="panel" selected="true">
+                    <ul id="replies-results">
+                    </ul>
+                    <script id="replies-status-tmpl" type="text/x-jq-template">
+                        <li class="status">
+                            <!--
+                            <figure>
+                                <img src="<%= user.profile_image_url %>" />
+                            </figure>
+                            -->
+                            <div>
+                                <a href="#details" id='<%= id_str %>' class='icon right' style="float:right" onclick="showditail(this.id)"></a>
+                                <span class="user_name"><%= user.name %></span>
+                                <span class="screen_name">@<%= user.screen_name %></span>
+                                <span class="date">/<%= created_at %></span>
+                                <div class="text m-text"><%= text %></div>
+                            </div>
+                        </li>
+                    </script>
+                </div>
+                <div title='作成' id="edit" class="panel"  data-footer="footerui">
+	<form>
+		<fieldset>
+			<legend></legend>
+			<label for="name">To:</label><br/>
+			<input type="text" id="edit-to" class='jq-ui-forms'/>
+			<a href="javascript:;" class="button">+</a><br/>
+			
+			<label for="name">Cc:</label><br/>
+			<input type="text" id="edit-cc" class='jq-ui-forms'/>
+			<a href="javascript:;" class="button">+</a><br/>
+			
+			<label for="web">件名:</label><br/>
+			<input type="text" id="edit-subject" class='jq-ui-forms'/><br/>
+			
+			<textarea name="web" id="edit-text" class='jq-ui-forms'></textarea>
+			<textarea name="web" id="org-text" disabled class='jq-ui-forms'></textarea><br/>
+		</fieldset>
+	</form><br><br><br>
+                    
+                </div>
+                <div title='詳細' id="details" class="panel"  data-footer="footerui2">
+                    <span id='detail-id'></span>
+                    <div id="show-results">
+                    </div>
+                    <script id="show-status-tmpl" type="text/x-jq-template">
+                        <figure>
+                            <img src="<%= user.profile_image_url %>" />
+                        </figure>
+                        <div>
+                            <span class="user_name">差出人:<%= user.name %></span>
+                            <span class="screen_name">@<%= user.screen_name %></span>
+                            <span class="date">/<%= created_at %></span>
+                            <!--
+                            <div class="text l-text">宛先:<%= text %></div>
+                            -->
+                            <div class="to">宛先:<%= to %></div>
+                            <div class="text l-text"><%= text_format %></div>
+                            <div class="reply_status"><a href="#details" id='<%= in_reply_to_status_id_str %>' onclick="addditail(this.id)"><%= in_reply_to_status_id_str %></a></div>
+                        </div>
+                    </script>
+                    <script id="add-status-tmpl" type="text/x-jq-template">
+                        <div class="add_status" style="margin-left:<%= indent %>">
+                            <figure>
+                                <img src="<%= user.profile_image_url %>" />
+                            </figure>
+                            <span class="user_name">差出人:<%= user.name %></span>
+                            <span class="screen_name">@<%= user.screen_name %></span>
+                            <span class="date">/<%= created_at %></span>
+
+                            <!--
+                            <div class="text l-text">宛先:<%= text %></div>
+                            -->
+                            <div class="to">宛先:<%= to %></div>
+                            <div class="text l-text"><%= text_format %></div>
+                            <div class="reply_status"><a href="#details" id='<%= in_reply_to_status_id_str %>' onclick="addditail(this.id)"><%= in_reply_to_status_id_str %></a></div>
+                        </div>
+                    </script>
+                </div>
+            </div>
+            <!-- bottom navbar. Add additional tabs here -->
+            <div id="navbar">
+                <div class="horzRule"></div>
+                <a href="#main" id='navbar_refresh' class='icon refresh' onclick="repliesUpdate()">更新</a>
+                <a href="#" id='navbar_magnifier' class='icon magnifier'>検索</a>
+                <a href="#edit" id='navbar_edit' class='icon pencil'>新規</a>
+            </div>
+            <div id="footerui">
+                <div class="horzRule"></div>
+                <a href="#main" onclick="statusUpdate();repliesUpdate()" id='navbar_send' class='icon upload'>送信</a>
+            </div>
+            <div id="footerui2">
+                <div class="horzRule"></div>
+                <a href="#main" id='navbar_trash' onclick="statusDestroy();repliesUpdate()" class='icon trash'>削除</a>
+                <a href="#" id='navbar_move' class='icon folder'>移動</a>
+                <a href="#edit" id='navbar_reply' onclick="setreplystatus()" class='icon chat'>返信</a>
+                <a href="#edit" id='navbar_forward' onclick="setfowerdstatus()" class='icon refresh'>転送</a>
+            </div>
+            <!-- this is the default left side nav menu.  If you do not want any, do not include these -->
+            <nav>
+                <div class='title'>@<span id='user-screen-name'>iijkaihoko</span></div>
+                <ul>
+                    <li class="icon home mini">
+                        <a href="#main" id='navbar_home' onclick="setquery('statuses/replies',{count:100});repliesUpdate();$.ui.toggleSideMenu()">受信トレイ</a>
+                     </li>
+                    <li class="icon right mini">
+                       <a href="#main" onclick="$.ui.toggleSideMenu()">AD-DIV</a>
+                     </li>
+                    <li class="icon right mini">
+                        <a href="#main" onclick="$.ui.toggleSideMenu()">AD-SED</a>
+                     </li>
+                    <li class="icon right mini">
+                        <a href="#main" onclick="$.ui.toggleSideMenu()">PD-ALL</a>
+                     </li>
+                    <li class="icon trash mini">
+                        <a href="#" onclick="$.ui.toggleSideMenu()">ゴミ箱</a>
+                    </li>
+                    <li class="icon message mini">
+                        <a href="#" id='navbar_sent' onclick=eval("setquery('statuses/user_timeline/"+user_id+"',{count:100});repliesUpdate();$.ui.toggleSideMenu()")>送信済み</a>
+                    </li>
+                </ul>
+                <!--
+                <div class="title">設定</div>
+                <ul>
+                    <li class="icon user mini">
+                        <a href="javascript:;" onclick="javascript:;">ユーザ切替</a>
+                    </li>
+                </ul>
+                -->
+                <div class="title">Themes</div>
+                <ul>
+                  <li><a href="javascript:;" onclick="setActiveStyleSheet('default')">Default</a></li>
+                  <li><a href="javascript:;" onclick="setActiveStyleSheet('carbon')">Carbon</a></li>
+                  <li><a href="javascript:;" onclick="setActiveStyleSheet('eco')">Eco</a></li>
+                  <li><a href="javascript:;" onclick="setActiveStyleSheet('frosty')">Frosty</a></li>
+                  <li><a href="javascript:;" onclick="setActiveStyleSheet('slate')">Slate</a></li>
+                  <li><a href="javascript:;" onclick="setActiveStyleSheet('volcano')">Volcano</a></li>
+                </ul>
+            </nav>
+        </div>
+        <script type="text/javascript" charset="utf-8" src="plugins/jq.template.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/init.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/main.js"></script>
+    </body>
+</html>
