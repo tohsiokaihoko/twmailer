@@ -30,6 +30,7 @@
                 <!-- here is where you can add your panels -->
                 <div title='受信トレイ' id="main" class="panel" selected="true">
                     <ul id="replies-results">
+                    <li><a href="#home" >home</a></li>
                     </ul>
                     <script id="replies-status-tmpl" type="text/x-jq-template">
                         <li class="status">
@@ -38,13 +39,13 @@
                                 <img src="<%= user.profile_image_url %>" />
                             </figure>
                             -->
-                            <div>
-                                <a href="#details" id='<%= id_str %>' class='icon right' style="float:right" onclick="showditail(this.id)"></a>
+                            <span style="width: 95%">
                                 <span class="user_name"><%= user.name %></span>
                                 <span class="screen_name">@<%= user.screen_name %></span>
                                 <span class="date">/<%= created_at %></span>
                                 <div class="text m-text"><%= text %></div>
-                            </div>
+                            </span>
+                            <a href="#details" id='<%= id_str %>' style="width: 5%" onclick="showditail(this.id)"></a>
                         </li>
                     </script>
                 </div>
@@ -133,6 +134,9 @@
                     <li class="icon home mini">
                         <a href="#main" id='navbar_home' onclick="setquery('statuses/replies',{count:100});repliesUpdate();$.ui.toggleSideMenu()">受信トレイ</a>
                      </li>
+                    <li class="icon message mini">
+                        <a href="#" id='navbar_sent' onclick=eval("setquery('statuses/user_timeline/"+user_id+"',{count:100});repliesUpdate();$.ui.toggleSideMenu()")>送信済み</a>
+                    </li>
                     <li class="icon right mini">
                        <a href="#main" onclick="$.ui.toggleSideMenu()">AD-DIV</a>
                      </li>
@@ -145,18 +149,13 @@
                     <li class="icon trash mini">
                         <a href="#" onclick="$.ui.toggleSideMenu()">ゴミ箱</a>
                     </li>
-                    <li class="icon message mini">
-                        <a href="#" id='navbar_sent' onclick=eval("setquery('statuses/user_timeline/"+user_id+"',{count:100});repliesUpdate();$.ui.toggleSideMenu()")>送信済み</a>
-                    </li>
                 </ul>
-                <!--
                 <div class="title">設定</div>
                 <ul>
                     <li class="icon user mini">
                         <a href="javascript:;" onclick="javascript:;">ユーザ切替</a>
                     </li>
                 </ul>
-                -->
                 <div class="title">Themes</div>
                 <ul>
                   <li><a href="javascript:;" onclick="setActiveStyleSheet('default')">Default</a></li>
