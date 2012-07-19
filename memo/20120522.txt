@@ -1,0 +1,49 @@
+GIO FVS
+アイシロン
+
+
+DDD
+
+社内サービス	GAIA
+
+
+
+---------
+上物ありきで作るべき
+
+	youtube的にだれでも投稿できる
+	3Dオブジェクト情報
+
+	ブロッブ、構造化データ
+
+	
+ニクト、
+
+
+-------------------
+スキード（http://www.skeed.co.jp/tech/skeedobjectstore/）、DDD（http://trac-idp.iiji.jp/dplat）
+
+ノードの追加
+	古いデータの再配置する？
+	トラフィック増えたりしない？
+	障害が起きた時の復旧手順。
+	
+	保存用ノード、処理ノードの追加ができる？
+	
+	
+
+暗号化
+	サーバサイド暗号化または秘密分散
+
+製品化する場合、マルチテナント対応が必要
+
+Coda,Sefu,Lusterの追加調査。アーキテクチャなどもう少し突っ込んで。
+
+
+金曜にブレスト2回目
+火曜に調査報告
+
+
+資料読む
+	http://datafarm.apgrid.org/event/gfarm10/slide/GW10-Tech-2-4-morikawa.pdf
+

@@ -81,6 +81,7 @@ function showditail(sid) {
     r.text = r.text.replace(/(s?https?:\/\/[-_.!~*'()a-zA-Z0-9;\/?:@&=+$,%#]+)/gi,'<a href="$1">$1</a>');
     
     //宛先
+    console.log('hoge2');
     r.to = r.text.match("^@[a-zA-Z0-9_]+");
     r.text_format = r.text.replace(/^@[a-zA-Z0-9_]+/,'');
     
